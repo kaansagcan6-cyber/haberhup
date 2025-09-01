@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaberHub - Son Dakika Haberler</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .warning-box {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .warning-content {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            border: 3px solid #ff4757;
+        }
+
+        .close-warning {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #888;
+            transition: color 0.3s ease;
+        }
+
+        .close-warning:hover {
+            color: #ff4757;
+        }
+
+        .warning-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff4757;
+            margin-bottom: 1rem;
+        }
+
+        .warning-content p {
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .submit-news-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .submit-news-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .breaking-news {
+            background: #ff4757;
+            color: white;
+            padding: 0.5rem 0;
+            text-align: center;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        .sponsor-news-banner {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            padding: 0.8rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-top: 2px solid #ffb347;
+            border-bottom: 2px solid #ffb347;
+        }
+
+        .sponsor-banner-content {
+            display: flex;
+            align-items: center;
+            animation: scrollRight 30s linear infinite;
+            gap: 3rem;
+        }
+
+        .sponsor-news-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            min-width: max-content;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sponsor-badge {
+            background: #ff4757;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #ff4757; }
+            to { box-shadow: 0 0 15px #ff4757; }
+        }
+
+        .sponsor-news-text {
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .sponsor-price {
+            background: rgba(255, 255, 255, 0.9);
+            color: #ff8c00;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        @keyframes scrollRight {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .sponsor-news-banner:hover .sponsor-banner-content {
+            animation-play-state: paused;
+        }
+
+        .add-sponsor-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            color: #333;
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .add-sponsor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-5px);
+            }
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .sponsor-showcase {
+            background: #f8f9fa;
+            padding: 3rem 0;
+            margin: 2rem 0;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .showcase-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .showcase-header p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .showcase-slider {
+            position: relative;
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .sponsor-slide {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            color: white;
+            padding: 2rem;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .slide-content {
+            flex: 1;
+            z-index: 2;
+        }
+
+        .sponsor-slide-badge {
+            background: rgba(255, 71, 87, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            box-shadow: 0 3px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .sponsor-slide-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .sponsor-slide-description {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .sponsor-slide-price {
+            background: linear-gradient(45deg, #ffd700, #ff8c00);
+            color: #333;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sponsor-slide-price:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .slide-image {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            opacity: 0.8;
+        }
+
+        .slide-navigation {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 3;
+        }
+
+        .slide-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        .slide-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 3;
+            backdrop-filter: blur(10px);
+        }
+
+        .slide-arrow:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slide-arrow.prev {
+            left: 20px;
+        }
+
+        .slide-arrow.next {
+            right: 20px;
+        }
+
+        .sponsor-slides {
+            display: none;
+        }
+
+        .sponsor-slides.active {
+            display: flex;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .news-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .news-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .news-item {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            max-width: 100%;
+        }
+
+        .news-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-preview-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .remove-single-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 71, 87, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .remove-single-image:hover {
+            background: #ff4757;
+            transform: scale(1.1);
+        }
+
+        .news-image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .news-image-gallery img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .news-image-gallery img:hover {
+            transform: scale(1.05);
+        }
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .news-content {
+            padding: 1.2rem;
+        }
+
+        .news-category {
+            background: #667eea;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .news-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.6rem;
+            color: #333;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-summary {
+            color: #666;
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+            font-size: 0.9rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .read-more {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .read-more:hover {
+            color: #5a67d8;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #ff3742;
+        }
+
+        .sidebar {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .sidebar-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .trending-item {
+            padding: 1rem;
+            border-left: 3px solid #667eea;
+            margin-bottom: 1rem;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .trending-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .trending-item h4 {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .trending-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+        }
+
+        .close {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #888;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .no-news {
+            text-align: center;
+            padding: 3rem;
+            color: #888;
+        }
+
+        .no-news-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .modal-content {
+                margin: 2% auto;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Uyarı Kutusu -->
+    <div id="warningBox" class="warning-box">
+        <div class="warning-content">
+            <span class="close-warning" onclick="closeWarning()">&times;</span>
+            <div class="warning-header">⚠️ ÖNEMLİ UYARI</div>
+            <p>Bu sitedeki haberler sahte ve yalandır. Bu sitedeki haberlerin yapımcılarıyla alakası yoktur ve onları ilgilendirmez. Sadece test amaçlıdır.</p>
+        </div>
+    </div>
+
+    <div class="breaking-news">
+        🔴 SON DAKİKA: Canlı haber akışı devam ediyor...
+    </div>
+
+    <!-- Sponsor Haber Bandı -->
+    <div class="sponsor-news-banner">
+        <div class="sponsor-banner-content" id="sponsorBanner">
+            <!-- Sponsor haberler buraya eklenecek -->
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">📰 HaberHub</a>
+                <div class="nav-links">
+                    <a href="#">Ana Sayfa</a>
+                    <a href="#">Gündem</a>
+                    <a href="#">Spor</a>
+                    <a href="#">Teknoloji</a>
+                    <button class="submit-news-btn" onclick="openAddNewsModal()">
+                        ✍️ Haber Gönder
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Son Dakika Haberler</h1>
+            <p>Güvenilmez haber kaynağınız. Her an güncel kalın, yanlış bilgilere ulaşın.</p>
+        </div>
+    </section>
+
+    <!-- Sponsor Haber Vitrini -->
+    <section class="sponsor-showcase">
+        <div class="container">
+            <div class="showcase-header">
+                <h2>💰 Sponsor Haberleri</h2>
+                <p>Öne çıkan sponsorlu içerikler</p>
+            </div>
+            
+            <div class="showcase-slider">
+                <!-- Slide 1 -->
+                <div class="sponsor-slides active" id="slide1">
+                    <div class="sponsor-slide" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="slide-content">
+                            <span class="sponsor-slide-badge">SPONSORLU İÇERİK</span>
+                            <h3 class="sponsor-slide-title">🎉 Büyük E-Ticaret Fırsatı!</h3>
+                            <p class="sponsor-slide-description">Yeni platform açıldı! %50 mega indirim fırsatını kaçırmayın. Binlerce ürün, ücretsiz kargo!</p>
+                            <button class="sponsor-slide-price" onclick="alert('Bu bir demo sponsor haberidir!')">28₺ - 7 Gün</button>
+                        </div>
+                        <div class="slide-image">🛒</div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="sponsor-slides" id="slide2">
+                    <div class="sponsor-slide" style="background: linear-gradient(135deg, #43a047 0%, #1b5e20 100%);">
+                        <div class="slide-content">
+                            <span class="sponsor-slide-badge">ÖZEL FIYAT</span>
+                            <h3 class="sponsor-slide-title">🏠 Emlak Yatırım Rehberi</h3>
+                            <p class="sponsor-slide-description">Profesyonel emlak danışmanlarımızla ücretsiz görüşme fırsatı. Yatırım tavsiyeleri ve değerlendirme.</p>
+                            <button class="sponsor-slide-price" onclick="alert('Bu bir demo sponsor haberidir!')">100₺ - 30 Gün</button>
+                        </div>
+                        <div class="slide-image">🏡</div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="sponsor-slides" id="slide3">
+                    <div class="sponsor-slide" style="background: linear-gradient(135deg, #ff6b35 0%, #d32f2f 100%);">
+                        <div class="slide-content">
+                            <span class="sponsor-slide-badge">ÖĞRENİM FIRSATI</span>
+                            <h3 class="sponsor-slide-title">📚 Sertifikalı Eğitim</h3>
+                            <p class="sponsor-slide-description">Online kurslarımızla kendinizi geliştirin. Uzman eğitmenler, sertifikalar ve iş imkanları sizi bekliyor.</p>
+                            <button class="sponsor-slide-price" onclick="alert('Bu bir demo sponsor haberidir!')">5₺ - 24 Saat</button>
+                        </div>
+                        <div class="slide-image">🎓</div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <button class="slide-arrow prev" onclick="changeSlide(-1)">‹</button>
+                <button class="slide-arrow next" onclick="changeSlide(1)">›</button>
+                
+                <div class="slide-navigation">
+                    <span class="slide-dot active" onclick="currentSlide(1)"></span>
+                    <span class="slide-dot" onclick="currentSlide(2)"></span>
+                    <span class="slide-dot" onclick="currentSlide(3)"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="main-content">
+            <main class="news-section">
+                <h2 class="section-title">🔥 Güncel Haberler</h2>
+                <div id="news-container" class="news-grid">
+                    <!-- Haberler buraya eklenecek -->
+                </div>
+            </main>
+
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">📈 Popüler Kategoriler</h3>
+                    <div class="trending-item">
+                        <h4>🔬 Teknoloji</h4>
+                        <p>En son teknoloji haberleri ve yenilikler</p>
+                    </div>
+                    <div class="trending-item">
+                        <h4>⚽ Spor</h4>
+                        <p>Spor dünyasından tüm gelişmeler</p>
+                    </div>
+                    <div class="trending-item">
+                        <h4>💰 Ekonomi</h4>
+                        <p>Finansal piyasalar ve ekonomi haberleri</p>
+                    </div>
+                    <div class="trending-item">
+                        <h4>🏥 Sağlık</h4>
+                        <p>Sağlık ve yaşam haberleri</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">📊 İstatistikler</h3>
+                    <div class="trending-item">
+                        <h4>Bugün</h4>
+                        <p id="todayCount">0 haber yayınlandı</p>
+                    </div>
+                    <div class="trending-item">
+                        <h4>Toplam</h4>
+                        <p id="totalCount">0 haber arşivde</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Haber Ekleme Modal -->
+    <div id="addNewsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 Haber Gönder</h2>
+                <span class="close" onclick="closeAddNewsModal()">&times;</span>
+            </div>
+            <form id="addNewsForm">
+                <div class="form-group">
+                    <label for="newsTitle">📰 Haber Başlığı</label>
+                    <input type="text" id="newsTitle" required placeholder="Haberinizin başlığını girin...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="newsCategory">🏷️ Kategori</label>
+                    <select id="newsCategory" required>
+                        <option value="">Kategori seçin...</option>
+                        <option value="Teknoloji">🔬 Teknoloji</option>
+                        <option value="Spor">⚽ Spor</option>
+                        <option value="Ekonomi">💰 Ekonomi</option>
+                        <option value="Sağlık">🏥 Sağlık</option>
+                        <option value="Politika">🏛️ Politika</option>
+                        <option value="Kültür">🎨 Kültür</option>
+                        <option value="Eğitim">📚 Eğitim</option>
+                        <option value="Diğer">📋 Diğer</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newsImage">🖼️ Haber Resimleri (Çoklu Seçim)</label>
+                    <input type="file" id="newsImage" accept="image/*" multiple>
+                    <div id="imagePreview" style="margin-top: 15px; display: none;">
+                        <div id="previewContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 15px;"></div>
+                        <button type="button" onclick="removeAllImages()" style="background: #ff4757; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            🗑️ Tüm Resimleri Kaldır
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newsSummary">📄 Haber Özeti</label>
+                    <textarea id="newsSummary" required placeholder="Haberinizin kısa özetini yazın..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newsContent">📝 Haber İçeriği</label>
+                    <textarea id="newsContent" style="height: 200px;" required placeholder="Haberinizin detaylarını yazın..."></textarea>
+                </div>
+                
+                <button type="button" class="btn-primary" onclick="submitNews()">
+                    🚀 Haberi Yayınla
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 HaberHub. Tüm hakları saklıdır. | Bu site test amaçlıdır.</p>
+        </div>
+    </footer>
+
+    <!-- Sponsor Haber Ekleme Butonu -->
+    <button class="add-sponsor-btn" onclick="openSponsorModal()">
+        💰 Sponsor Haber
+    </button>
+
+    <!-- Sponsor Haber Modal -->
+    <div id="sponsorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💰 Sponsor Haber Ekle</h2>
+                <span class="close" onclick="closeSponsorModal()">&times;</span>
+            </div>
+            <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #ffd700;">
+                <h4 style="color: #856404; margin-bottom: 0.5rem;">🌟 Sponsor Haber Avantajları:</h4>
+                <ul style="color: #856404; margin: 0; padding-left: 1.5rem;">
+                    <li>Ana sayfada sürekli kayan banner'da görünür</li>
+                    <li>Özel sponsor vitrininde öne çıkar</li>
+                    <li>Altın renkli özel tasarım</li>
+                    <li>⏰ 24 Saat: Hızlı tanıtım (5₺)</li>
+                    <li>📅 7 Gün: Orta vadeli görünürlük (28₺)</li>
+                    <li>🗓️ 30 Gün: Uzun süreli pazarlama (100₺)</li>
+                </ul>
+            </div>
+            <form id="sponsorNewsForm">
+                <div class="form-group">
+                    <label for="sponsorTitle">📰 Sponsor Haber Başlığı</label>
+                    <input type="text" id="sponsorTitle" required placeholder="Sponsor haberinizin başlığını girin..." maxlength="80">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sponsorCategory">🏷️ Kategori</label>
+                    <select id="sponsorCategory" required>
+                        <option value="">Kategori seçin...</option>
+                        <option value="Teknoloji">🔬 Teknoloji</option>
+                        <option value="Spor">⚽ Spor</option>
+                        <option value="Ekonomi">💰 Ekonomi</option>
+                        <option value="Sağlık">🏥 Sağlık</option>
+                        <option value="Politika">🏛️ Politika</option>
+                        <option value="Kültür">🎨 Kültür</option>
+                        <option value="Eğitim">📚 Eğitim</option>
+                        <option value="Diğer">📋 Diğer</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sponsorImage">🖼️ Haber Resimleri (Çoklu Seçim)</label>
+                    <input type="file" id="sponsorImage" accept="image/*" multiple>
+                    <div id="sponsorImagePreview" style="margin-top: 15px; display: none;">
+                        <div id="sponsorPreviewContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 15px;"></div>
+                        <button type="button" onclick="removeAllSponsorImages()" style="background: #ff4757; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            🗑️ Tüm Resimleri Kaldır
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sponsorPrice">💵 Sponsorluk Paketi</label>
+                    <select id="sponsorPrice" required>
+                        <option value="">Paket seçin...</option>
+                        <option value="5">⏰ 24 Saat - 5₺</option>
+                        <option value="28">📅 7 Gün - 28₺</option>
+                        <option value="100">🗓️ 30 Gün - 100₺</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sponsorSummary">📄 Haber Özeti</label>
+                    <textarea id="sponsorSummary" required placeholder="Sponsor haberinizin kısa özetini yazın..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sponsorContent">📝 Haber İçeriği</label>
+                    <textarea id="sponsorContent" style="height: 200px;" required placeholder="Sponsor haberinizin detaylarını yazın..."></textarea>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="color: #6c757d; font-size: 0.9rem; margin: 0;">
+                        <strong>Not:</strong> Bu bir demo sitedir. Gerçek ödeme işlemi yapılmaz. Sponsor haberleriniz otomatik olarak yayınlanacaktır.
+                    </p>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    🚀 Sponsor Haberi Yayınla
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // News and sponsor storage
+        let newsData = [];
+        let sponsorNews = [
+            {
+                id: 1,
+                title: "🎉 Yeni E-Ticaret Platformu Açıldı! %50 İndirim Fırsatı - Binlerce Ürün",
+                price: "28₺",
+                link: "#",
+                expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 gün sonra
+            },
+            {
+                id: 2,
+                title: "🏠 Emlak Yatırımı Fırsatları - Ücretsiz Danışmanlık ve Değerlendirme",
+                price: "100₺",
+                link: "#",
+                expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 gün sonra
+            },
+            {
+                id: 3,
+                title: "📚 Online Eğitim Kursu - Sertifikalı Programlar ve Uzman Eğitmenler",
+                price: "5₺",
+                link: "#",
+                expiryDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) // 1 gün sonra
+            },
+            {
+                id: 4,
+                title: "💻 Yazılım Geliştirme Bootcamp - 6 Aylık Garantili İş İmkanı",
+                price: "100₺",
+                link: "#",
+                expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 gün sonra
+            },
+            {
+                id: 5,
+                title: "🚗 Otomobil Satış Galerisi - 2024 Model Sıfır Araçlar %0 Faiz",
+                price: "28₺",
+                link: "#",
+                expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 gün sonra
+            },
+            {
+                id: 6,
+                title: "🍕 Yeni Restoran Açıldı! İlk 100 Müşteriye %30 İndirim",
+                price: "5₺",
+                link: "#",
+                expiryDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) // 1 gün sonra
+            }
+        ];
+
+        // Close warning box
+        function closeWarning() {
+            document.getElementById('warningBox').style.display = 'none';
+        }
+
+        // Selected sponsor images array
+        let selectedSponsorImages = [];
+
+        // Sponsor image preview functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sponsorImageInput = document.getElementById('sponsorImage');
+            if (sponsorImageInput) {
+                sponsorImageInput.addEventListener('change', function(e) {
+                    const files = Array.from(e.target.files);
+                    selectedSponsorImages = [];
+                    
+                    if (files.length > 0) {
+                        document.getElementById('sponsorImagePreview').style.display = 'block';
+                        const container = document.getElementById('sponsorPreviewContainer');
+                        container.innerHTML = '';
+                        
+                        let loadedCount = 0;
+                        files.forEach((file, index) => {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                selectedSponsorImages[index] = e.target.result;
+                                loadedCount++;
+                                
+                                const imageDiv = document.createElement('div');
+                                imageDiv.className = 'image-preview-item';
+                                imageDiv.innerHTML = `
+                                    <img src="${e.target.result}" alt="Preview ${index + 1}">
+                                    <button type="button" class="remove-single-image" onclick="removeSingleSponsorImage(${index})" title="Bu resmi kaldır">
+                                        ×
+                                    </button>
+                                `;
+                                container.appendChild(imageDiv);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    } else {
+                        document.getElementById('sponsorImagePreview').style.display = 'none';
+                        selectedSponsorImages = [];
+                    }
+                });
+            }
+        });
+
+        // Remove single sponsor image function
+        function removeSingleSponsorImage(index) {
+            selectedSponsorImages.splice(index, 1);
+            
+            // Recreate the preview
+            if (selectedSponsorImages.length > 0) {
+                const container = document.getElementById('sponsorPreviewContainer');
+                container.innerHTML = '';
+                
+                selectedSponsorImages.forEach((imageSrc, newIndex) => {
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'image-preview-item';
+                    imageDiv.innerHTML = `
+                        <img src="${imageSrc}" alt="Preview ${newIndex + 1}">
+                        <button type="button" class="remove-single-image" onclick="removeSingleSponsorImage(${newIndex})" title="Bu resmi kaldır">
+                            ×
+                        </button>
+                    `;
+                    container.appendChild(imageDiv);
+                });
+            } else {
+                document.getElementById('sponsorImagePreview').style.display = 'none';
+                document.getElementById('sponsorImage').value = '';
+            }
+        }
+
+        // Remove all sponsor images function
+        function removeAllSponsorImages() {
+            selectedSponsorImages = [];
+            document.getElementById('sponsorImage').value = '';
+            document.getElementById('sponsorImagePreview').style.display = 'none';
+            document.getElementById('sponsorPreviewContainer').innerHTML = '';
+        }
+
+        // Slider functionality
+        let currentSlideIndex = 0;
+        const totalSlides = 3;
+
+        function changeSlide(direction) {
+            const currentSlide = document.querySelector('.sponsor-slides.active');
+            const currentDot = document.querySelector('.slide-dot.active');
+            
+            currentSlide.classList.remove('active');
+            currentDot.classList.remove('active');
+            
+            currentSlideIndex += direction;
+            
+            if (currentSlideIndex >= totalSlides) currentSlideIndex = 0;
+            if (currentSlideIndex < 0) currentSlideIndex = totalSlides - 1;
+            
+            const nextSlide = document.getElementById(`slide${currentSlideIndex + 1}`);
+            const nextDot = document.querySelectorAll('.slide-dot')[currentSlideIndex];
+            
+            nextSlide.classList.add('active');
+            nextDot.classList.add('active');
+        }
+
+        function currentSlide(n) {
+            const currentSlideEl = document.querySelector('.sponsor-slides.active');
+            const currentDot = document.querySelector('.slide-dot.active');
+            
+            currentSlideEl.classList.remove('active');
+            currentDot.classList.remove('active');
+            
+            currentSlideIndex = n - 1;
+            
+            const targetSlide = document.getElementById(`slide${n}`);
+            const targetDot = document.querySelectorAll('.slide-dot')[currentSlideIndex];
+            
+            targetSlide.classList.add('active');
+            targetDot.classList.add('active');
+        }
+
+        // Auto slide every 5 seconds
+        setInterval(function() {
+            changeSlide(1);
+        }, 5000);
+
+        // Selected images array
+        let selectedImages = [];
+
+        // Image preview functionality
+        document.getElementById('newsImage').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            selectedImages = [];
+            
+            if (files.length > 0) {
+                document.getElementById('imagePreview').style.display = 'block';
+                const container = document.getElementById('previewContainer');
+                container.innerHTML = '';
+                
+                let loadedCount = 0;
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        selectedImages[index] = e.target.result;
+                        loadedCount++;
+                        
+                        const imageDiv = document.createElement('div');
+                        imageDiv.className = 'image-preview-item';
+                        imageDiv.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview ${index + 1}">
+                            <button type="button" class="remove-single-image" onclick="removeSingleImage(${index})" title="Bu resmi kaldır">
+                                ×
+                            </button>
+                        `;
+                        container.appendChild(imageDiv);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                document.getElementById('imagePreview').style.display = 'none';
+                selectedImages = [];
+            }
+        });
+
+        // Remove single image function
+        function removeSingleImage(index) {
+            selectedImages.splice(index, 1);
+            
+            // Recreate the preview
+            if (selectedImages.length > 0) {
+                const container = document.getElementById('previewContainer');
+                container.innerHTML = '';
+                
+                selectedImages.forEach((imageSrc, newIndex) => {
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'image-preview-item';
+                    imageDiv.innerHTML = `
+                        <img src="${imageSrc}" alt="Preview ${newIndex + 1}">
+                        <button type="button" class="remove-single-image" onclick="removeSingleImage(${newIndex})" title="Bu resmi kaldır">
+                            ×
+                        </button>
+                    `;
+                    container.appendChild(imageDiv);
+                });
+            } else {
+                document.getElementById('imagePreview').style.display = 'none';
+                document.getElementById('newsImage').value = '';
+            }
+        }
+
+        // Remove all images function
+        function removeAllImages() {
+            selectedImages = [];
+            document.getElementById('newsImage').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('previewContainer').innerHTML = '';
+        }
+
+        // Submit news function - called directly from button
+        function submitNews() {
+            console.log('submitNews function called!'); // Debug
+            
+            // Get form values
+            const title = document.getElementById('newsTitle').value.trim();
+            const category = document.getElementById('newsCategory').value;
+            const summary = document.getElementById('newsSummary').value.trim();
+            const content = document.getElementById('newsContent').value.trim();
+            
+            console.log('Form data:', { title, category, summary, content }); // Debug
+            
+            // Check if all fields are filled
+            if (!title || !category || !summary || !content) {
+                alert('❌ Lütfen tüm alanları doldurun!');
+                return;
+            }
+            
+            // Create new news object
+            const newNews = {
+                id: Date.now(),
+                title: title,
+                category: category,
+                summary: summary,
+                content: content,
+                images: selectedImages.length > 0 ? [...selectedImages] : [],
+                date: new Date().toLocaleString('tr-TR')
+            };
+            
+            console.log('New news object:', newNews); // Debug
+            
+            // Add to news array
+            newsData.unshift(newNews);
+            console.log('Total news count:', newsData.length); // Debug
+            
+            // Update the display
+            displayNews();
+            updateStats();
+            
+            // Close modal
+            closeAddNewsModal();
+            
+            // Show success message
+            const imageText = selectedImages.length > 0 ? ` ve ${selectedImages.length} resim` : '';
+            alert(`✅ Haberiniz başarıyla yayınlandı!${imageText}`);
+        }
+
+        // Display sponsor showcase
+        function displaySponsorShowcase() {
+            const showcase = document.getElementById('sponsorShowcase');
+            
+            // Filter active sponsor news (not expired)
+            const activeSponsorNews = sponsorNews.filter(item => new Date() < new Date(item.expiryDate));
+            
+            console.log('Active sponsor news:', activeSponsorNews.length); // Debug
+            
+            if (activeSponsorNews.length === 0) {
+                showcase.innerHTML = `
+                    <div class="empty-showcase">
+                        <div class="empty-showcase-icon">💰</div>
+                        <h3>Henüz sponsor haber yok</h3>
+                        <p>İlk sponsor olan siz olun! Haberlerinizi öne çıkarın.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            showcase.innerHTML = activeSponsorNews.map(item => {
+                const daysLeft = Math.ceil((new Date(item.expiryDate) - new Date()) / (1000 * 60 * 60 * 24));
+                return `
+                    <div class="sponsor-showcase-item" onclick="${item.link !== '#' ? `window.open('${item.link}', '_blank')` : 'alert(\'Bu bir demo sponsor haberidir!\')'}">
+                        <div class="sponsor-showcase-image">
+                            💎
+                        </div>
+                        <div class="sponsor-showcase-content">
+                            <span class="sponsor-showcase-badge">SPONSORLU</span>
+                            <h3 class="sponsor-showcase-title">${item.title}</h3>
+                            <div class="sponsor-showcase-meta">
+                                <span>🕒 ${daysLeft} gün kaldı</span>
+                                <span class="sponsor-showcase-price">${item.price}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            console.log('Sponsor showcase updated with', activeSponsorNews.length, 'items'); // Debug
+        }
+
+        // Display sponsor news banner
+        function displaySponsorBanner() {
+            const banner = document.getElementById('sponsorBanner');
+            
+            // Filter active sponsor news (not expired)
+            const activeSponsorNews = sponsorNews.filter(item => new Date() < new Date(item.expiryDate));
+            
+            if (activeSponsorNews.length === 0) {
+                banner.innerHTML = `
+                    <div class="sponsor-news-item">
+                        <span class="sponsor-badge">SPONSOR</span>
+                        <span class="sponsor-news-text">📢 Sponsor haber alanı boş - İlk sponsor olmak için tıklayın!</span>
+                        <span class="sponsor-price">50₺'den başlayan fiyatlar</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create banner content with all sponsor news (repeat for infinite scroll)
+            const sponsorHTML = activeSponsorNews.map(item => `
+                <div class="sponsor-news-item" onclick="${item.link !== '#' ? `window.open('${item.link}', '_blank')` : ''}">
+                    <span class="sponsor-badge">SPONSOR</span>
+                    <span class="sponsor-news-text">${item.title}</span>
+                    <span class="sponsor-price">${item.price}</span>
+                </div>
+            `).join('');
+            
+            // Repeat content multiple times for seamless scroll
+            banner.innerHTML = sponsorHTML + sponsorHTML + sponsorHTML;
+        }
+
+        // Open sponsor modal
+        function openSponsorModal() {
+            document.getElementById('sponsorModal').style.display = 'block';
+        }
+
+        // Close sponsor modal
+        function closeSponsorModal() {
+            document.getElementById('sponsorModal').style.display = 'none';
+            document.getElementById('sponsorNewsForm').reset();
+            // Clear sponsor selected images
+            selectedSponsorImages = [];
+            document.getElementById('sponsorImagePreview').style.display = 'none';
+            document.getElementById('sponsorPreviewContainer').innerHTML = '';
+        }
+
+        // Submit sponsor news
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // Sponsor form submit handler
+            const sponsorForm = document.getElementById('sponsorNewsForm');
+            if (sponsorForm) {
+                sponsorForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const title = document.getElementById('sponsorTitle').value.trim();
+                    const category = document.getElementById('sponsorCategory').value;
+                    const summary = document.getElementById('sponsorSummary').value.trim();
+                    const content = document.getElementById('sponsorContent').value.trim();
+                    const priceOption = document.getElementById('sponsorPrice').value;
+                    
+                    if (!title || !category || !summary || !content || !priceOption) {
+                        alert('❌ Lütfen tüm alanları doldurun!');
+                        return;
+                    }
+                    
+                    // Calculate expiry date based on price
+                    let days = 1; // default 24 hours
+                    let priceText = '5₺';
+                    if (priceOption === '28') {
+                        days = 7;
+                        priceText = '28₺';
+                    } else if (priceOption === '100') {
+                        days = 30;
+                        priceText = '100₺';
+                    }
+                    
+                    const newSponsorNews = {
+                        id: Date.now(),
+                        title: title,
+                        category: category,
+                        summary: summary,
+                        content: content,
+                        images: selectedSponsorImages.length > 0 ? [...selectedSponsorImages] : [],
+                        price: priceText,
+                        link: "#",
+                        expiryDate: new Date(Date.now() + days * 24 * 60 * 60 * 1000),
+                        date: new Date().toLocaleString('tr-TR')
+                    };
+                    
+                    sponsorNews.push(newSponsorNews);
+                    
+                    // Add to regular news as well (with sponsor badge)
+                    const regularNews = {
+                        id: Date.now() + 1,
+                        title: `💎 ${title}`,
+                        category: category,
+                        summary: `[SPONSORLU] ${summary}`,
+                        content: content,
+                        images: selectedSponsorImages.length > 0 ? [...selectedSponsorImages] : [],
+                        date: new Date().toLocaleString('tr-TR'),
+                        isSponsored: true
+                    };
+                    
+                    newsData.unshift(regularNews);
+                    
+                    displaySponsorBanner();
+                    displayNews();
+                    updateStats();
+                    closeSponsorModal();
+                    
+                    alert(`✅ Sponsor haberiniz ${days} ${days === 1 ? 'gün' : 'gün'} boyunca hem banner'da hem vitrin'de hem de ana haberlerde yayınlanacak! Teşekkür ederiz.`);
+                });
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const warningBox = document.getElementById('warningBox');
+            
+            // Warning box click handler
+            if (warningBox) {
+                warningBox.addEventListener('click', function(e) {
+                    if (e.target === warningBox) {
+                        closeWarning();
+                    }
+                });
+            }
+            
+            // Initialize everything
+            loadNews();
+            displayNews();
+            updateStats();
+            
+            console.log('Site loaded successfully!'); // Debug log
+        });
+
+        // Load news and sponsor data
+        function loadNews() {
+            // Initialize with some sample news if empty
+            if (newsData.length === 0) {
+                newsData = [
+                    {
+                        id: 1,
+                        title: "HaberHub Platformu Kullanıma Açıldı",
+                        category: "Teknoloji",
+                        summary: "Yeni nesil haber paylaşım platformu HaberHub, kullanıcıların kendi haberlerini paylaşabileceği interaktif bir ortam sunuyor.",
+                        content: "Kullanıcı dostu arayüzü ve modern tasarımıyla dikkat çeken platform, haber okuma deneyimini yeniden tanımlıyor.",
+                        images: [],
+                        date: new Date().toLocaleString('tr-TR')
+                    },
+                    {
+                        id: 2,
+                        title: "Teknoloji Dünyasında Yeni Gelişmeler",
+                        category: "Teknoloji",
+                        summary: "Yapay zeka ve makine öğrenmesi alanında yaşanan son gelişmeler, teknoloji sektörünü heyecanlandırıyor.",
+                        content: "Bu gelişmeler sayesinde günlük hayatımızda teknolojinin rolü giderek artmaya devam ediyor.",
+                        images: [],
+                        date: new Date().toLocaleString('tr-TR')
+                    }
+                ];
+            }
+            
+            console.log('News loaded:', newsData.length);
+            console.log('Sponsor news available:', sponsorNews.length);
+        }
+
+        // Display all news
+        function displayNews() {
+            const container = document.getElementById('news-container');
+            
+            if (newsData.length === 0) {
+                container.innerHTML = `
+                    <div class="no-news">
+                        <div class="no-news-icon">📰</div>
+                        <h3>Henüz haber yok</h3>
+                        <p>İlk haberinizi göndermek için "Haber Gönder" butonuna tıklayın</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = newsData.map(news => `
+                <article class="news-item">
+                    <div class="news-image">
+                        ${news.images && news.images.length > 0 ? 
+                            (news.images.length === 1 ? 
+                                `<img src="${news.images[0]}" alt="${news.title}">` :
+                                news.images.length === 2 ?
+                                `<div class="news-image-gallery">
+                                    ${news.images.slice(0, 2).map(img => `<img src="${img}" alt="${news.title}">`).join('')}
+                                </div>` :
+                                news.images.length === 3 ?
+                                `<div class="news-image-gallery three-images">
+                                    ${news.images.slice(0, 3).map(img => `<img src="${img}" alt="${news.title}">`).join('')}
+                                </div>` :
+                                `<div class="news-image-gallery four-images">
+                                    ${news.images.slice(0, 3).map(img => `<img src="${img}" alt="${news.title}">`).join('')}
+                                    <div style="position: relative; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                        <img src="${news.images[3]}" alt="${news.title}" style="opacity: 0.4;">
+                                        <div style="position: absolute; font-size: 1.2rem;">+${news.images.length - 3}</div>
+                                    </div>
+                                </div>`
+                            ) : 
+                            `📰 ${news.category}`
+                        }
+                        ${news.isSponsored ? '<div style="position: absolute; top: 5px; left: 5px; background: linear-gradient(45deg, #ffd700, #ff8c00); color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; font-weight: bold;">SPONSOR</div>' : ''}
+                    </div>
+                    <div class="news-content">
+                        <span class="news-category">${news.category}</span>
+                        <h2 class="news-title">${news.title}</h2>
+                        <p class="news-summary">${news.summary}</p>
+                        <div class="news-meta">
+                            <span>🕒 ${news.date}</span>
+                            <div>
+                                <a href="#" class="read-more">Devamını Oku</a>
+                                ${news.images && news.images.length > 1 ? `<span style="margin: 0 10px; color: #667eea; font-size: 0.9rem;">📷 ${news.images.length}</span>` : ''}
+                                <button class="delete-btn" onclick="deleteNews(${news.id})" style="margin-left: 10px;">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const today = new Date().toDateString();
+            const todayNews = newsData.filter(news => new Date(news.date).toDateString() === today);
+            
+            document.getElementById('todayCount').textContent = `${todayNews.length} haber yayınlandı`;
+            document.getElementById('totalCount').textContent = `${newsData.length} haber arşivde`;
+        }
+
+        // Open add news modal
+        function openAddNewsModal() {
+            document.getElementById('addNewsModal').style.display = 'block';
+        }
+
+        // Close add news modal
+        function closeAddNewsModal() {
+            document.getElementById('addNewsModal').style.display = 'none';
+            document.getElementById('addNewsForm').reset();
+            // Clear selected images array
+            selectedImages = [];
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('previewContainer').innerHTML = '';
+        }
+
+        // Add new news
+        document.getElementById('addNewsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('newsTitle').value;
+            const category = document.getElementById('newsCategory').value;
+            const summary = document.getElementById('newsSummary').value;
+            const content = document.getElementById('newsContent').value;
+            
+            // Create news immediately with current selected images
+            const newNews = {
+                id: Date.now(),
+                title: title,
+                category: category,
+                summary: summary,
+                content: content,
+                images: [...selectedImages], // Copy the selected images array
+                date: new Date().toLocaleString('tr-TR')
+            };
+            
+            newsData.unshift(newNews); // Add to beginning
+            displayNews();
+            updateStats();
+            closeAddNewsModal();
+            
+            // Show success message
+            const imageCount = selectedImages.length;
+            alert(`✅ Haberiniz başarıyla gönderildi ve yayınlandı! ${imageCount > 0 ? `(${imageCount} resim eklendi)` : ''}`);
+        });
+
+        // Delete news
+        function deleteNews(id) {
+            if (confirm('Bu haberi silmek istediğinizden emin misiniz?')) {
+                newsData = newsData.filter(news => news.id !== id);
+                displayNews();
+                updateStats();
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const newsModal = document.getElementById('addNewsModal');
+            const sponsorModal = document.getElementById('sponsorModal');
+            
+            if (event.target == newsModal) {
+                closeAddNewsModal();
+            }
+            if (event.target == sponsorModal) {
+                closeSponsorModal();
+            }
+        }
+    </script>
+</body>
+</html>
